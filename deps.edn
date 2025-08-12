@@ -14,4 +14,5 @@
                     :extra-paths ["test"]
                     :main-opts   ["-m" "cognitect.test-runner" "-d" "test"]}}
  :paths   ["resources" "src"]
- :deps    {org.clojure/tools.cli {:mvn/version "0.3.5"}}}
+ :deps    {org.clojure/tools.cli {:mvn/version "0.3.5"}
+           org.clojure/data.json {:mvn/version "2.5.0"}}}
