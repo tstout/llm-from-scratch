@@ -15,55 +15,74 @@
 ;;     raw_text = f.read()
 
 (def verdict-txt
+  "Chapter 2 - read the chapter text from a URL. Note in the book
+   the text is assigned to the variable raw_text. Here it is assigned
+   to a var named verdict-txt"
   (slurp
    (str "https://raw.githubusercontent.com/rasbt/"
         "LLMs-from-scratch/main/ch02/01_main-chapter-code/"
         "the-verdict.txt")))
 
+;; Python
 ;; preprocessed = re.split(r'([,.:;?_!"()\']|--|\s)', raw_text)
 ;; preprocessed = [item.strip() for item in preprocessed if item.strip()]
 ;; print(len(preprocessed))
 
-(defn tokenizer [txt]
-  (string/split ))
+(defn tokenizer 
+  "Chapter 2 tokenizer. Note: The python regex in simpler than
+  the java regex used here to achieve the same result. Interesting that there is
+  such a large difference between python and java regex behavior."
+  [txt]
+  (->> 
+   (.split txt "(?<=(?:--)|[,.:;?_!\"()'\\s])|(?=(?:--)|[,.:;?_!\"()'\\s])") 
+   (map string/trim)
+   (filter not-empty)))
 
+(def preprocessed
+  "As in the book, this is a complete collection of the tokens from the 
+   short story."
+  (tokenizer verdict-txt))
 
-
-
-
-
+;;
+;; Building the Vocabulary
+;;
+(def vocabulary 
+  "Create integer token IDs for the tokens. This is simply enumerating the sorted distinct
+   tokens. The set fn is used to create the sequence of distinct tokens.
+   This defines a var bound to the symbol vocabulary as a sequence of [index token] pairs."
+  (->> preprocessed
+       set
+       sort
+       (keep-indexed (fn [index token] [index token]))))
 
 (comment
+  ;; REPL evaluations
+  
+  ;; Entire Text
   verdict-txt
 
-  ;; print("Total number of character:", len(raw_text))
-  ;; print(raw_text[:99])
-  (format "Total number of character: %d" (.length verdict-txt))
-  (subs verdict-txt 0 99)
-
-  ;; Chapter 2 page 32
-  ;; import re
-  ;;  text = "Hello, world. This, is a test."
-  ;; result = re.split (r'(\s)', text)
-  ;; print (result)
-
-  (def text "Hello, world. This, is a test.")
-    (string/split text #"(\s)")
+  ;; test the tokeinizer fn
+  (tokenizer "Hello, world. This--, is a test.")
 
 
-  ;; result = [item for item in result if item.strip()]
-  ;; print (result)
+  ;; How many tokens are in the short story?
+  (-> verdict-txt
+      tokenizer
+      count)
 
-  ;; “text = "Hello, world. Is this-- a test?"
-  ;; result = re.split(r'([,.:;?_!"()\']|--|\s)', text)
-  ;; result = [item.strip() for item in result if item.strip()]
-  ;; print(result)”
-  (def text2 "Hello, world. Is this-- a test?")
-  (string/split text2 #"([,.:;?_!\"()\']|--|\\s)") 
+  ;; Fist 30 tokens from the short story
+  (take 30 (tokenizer verdict-txt))
 
-  
-  (take 3 (seq "abcdefghijk"))
-  (str (take 3 "abcdefghijk"))
-  
+  ;; An equivalent form to take the first 30 (cleaner IMHO)
+  (->> verdict-txt
+       tokenizer
+       (take 30))
+
+  ;; The Vocubulary...token IDs
+  ;;
+  ;; How many distinct tokens?
+  (count (set preprocessed))
+
+
   ;;
   )
