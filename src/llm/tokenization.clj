@@ -117,7 +117,7 @@
   
 
   ;;
-  ;; Test out tokenizer-v1 using 
+  ;; Test out tokenizer-v1 using the short story as the vocabulary
   ;;
   (def tokenizer-v1 (mk-tokenizer-v1 (vocabulary verdict-txt)))
 
