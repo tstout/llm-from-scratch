@@ -1,4 +1,8 @@
 {:aliases {:llm    {:main-opts ["-m" "llm.core"]}
+           :repl   {:extra-deps  {com.github.tstout/repl-kit  {:mvn/version "1.0.10"}
+                                  org.clojure/tools.namespace {:mvn/version "1.5.0"}}
+                    :extra-paths ["dev"]
+                    :main-opts   ["-m" "repl-kit.core"]}
            :build  {:deps       {io.github.clojure/tools.build {:git/tag "v0.8.1"
                                                                 :git/sha "7d40500"}}
                     :ns-default build}
