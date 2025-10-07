@@ -87,7 +87,6 @@
   ;; test the tokeinizer fn
   (tokenizer "Hello, world. This--, is a test.")
 
-
   ;; How many tokens are in the short story?
   (-> verdict-txt
       tokenizer
@@ -119,10 +118,13 @@
   ;;
   ;; Test out tokenizer-v1 using the short story as the vocabulary
   ;;
-  (def tokenizer-v1 (mk-tokenizer-v1 (vocabulary verdict-txt)))
+  (def tokenizer-v1 
+    (mk-tokenizer-v1 (vocabulary verdict-txt)))
+
 
   (tokenizer-v1 :encode "the where brown at")
   (tokenizer-v1 :decode [988 1092 235 180])
+  (tokenizer-v1 :decode )
 
   ;;
   )
