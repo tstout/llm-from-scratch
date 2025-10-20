@@ -53,17 +53,21 @@
    to create the sequence of distinct tokens. Returns a map of tokens to 
    integer id."
   [txt]
-  (->> txt
-       tokenizer
-       set
-       sort
-       (keep-indexed (fn [index token] [token index]))
-       (into {})))
+  (-> txt
+      tokenizer
+      set
+      sort
+      vec
+      (as-> v 
+            (conj v "<|endoftext|>") 
+            (conj v "<|unk|>")
+            (keep-indexed (fn [index token] [token index]) v)
+            (into {} v))))
 
 ;;
 ;; The Python class SimpleTokenizerV1 as a function
 ;;
-(defn mk-tokenizer-v1 
+(defn mk-tokenizer-v2 
   "Returns a fn that given a vocabulary, accepts the following operations:
    :encode - accepts text to encode, returns sequence of encoding id values
    :decode - accepts a sequence of ids to decode, returns sequence of decode text" 
@@ -71,7 +75,8 @@
   (let [str-to-int vocab
         int-to-str (map-invert vocab)
         ops {:encode (fn [txt] (->> (tokenizer txt) 
-                                    (map str-to-int)))
+                                    (map str-to-int)
+                                    (replace {nil "<|unk|>"})))
              :decode (fn [ids] (->> ids 
                                     (map int-to-str) 
                                     (string/join " ")))}]
@@ -79,8 +84,8 @@
 
 
 (comment
-  ;; REPL evaluations
-  
+  ;; REPL evaluationsf
+
   ;; Entire Text
   verdict-txt
 
@@ -107,24 +112,31 @@
 
   ;; Create a vocabulary from the short story
   (vocabulary verdict-txt)
-  
+  (last (vocabulary verdict-txt))
+
 
   ;;
   ;; Convert a new sample text to token Ids
-  ;;
+  ;;`
   (vocabulary "The brown dog playfully chased the swift fox")
-  
+
 
   ;;
   ;; Test out tokenizer-v1 using the short story as the vocabulary
   ;;
-  (def tokenizer-v1 
-    (mk-tokenizer-v1 (vocabulary verdict-txt)))
+  (def tokenizer-v2
+    (mk-tokenizer-v2 (vocabulary verdict-txt)))
 
 
-  (tokenizer-v1 :encode "the where brown at")
-  (tokenizer-v1 :decode [988 1092 235 180])
-  (tokenizer-v1 :decode )
+  (tokenizer-v2 :encode "the where brown at")
+  (tokenizer-v2 :decode [988 1092 235 180])
+  ;;
+  ;; 
+  (tokenizer-v2 :encode "Hello, do you like tea?")
+
+  (def toks (tokenizer-v2 :encode "Hello, do you like tea?"))
+  (replace {nil "<?>"} toks)
+
 
   ;;
   )
