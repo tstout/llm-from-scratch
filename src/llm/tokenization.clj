@@ -1,4 +1,7 @@
 (ns llm.tokenization
+  "Experiments with the basics of tokenization. This is for learning purposes.
+   Actual tokenization uses a BPE tokenizer implemented in src/llm/bpe.clj, 
+   which is a thin wrapper around the jtokkit library."
   (:require [clojure.string :as string]
             [clojure.set :refer [map-invert]]))
 

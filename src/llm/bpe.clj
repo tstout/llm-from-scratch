@@ -37,24 +37,39 @@
 
   ;; Create a BPE tokenizer
   (def bpe-tokenizer (mk-bpe-tokenizer))
-  
+
   ;; encode the sample text from the book, binding result to the var 'encoded'
   (def encoded
     (bpe-tokenizer
      :encode
      "Hello, do you like tea? <|endoftext|> In the sunlit terraces of someunknownPlace."))
-  
+
+  encoded
+
   ;; decode the encoded token ids back to text
   (bpe-tokenizer :decode encoded)
-  
+
   ;; demonstrate encoding and decoding unknown words
   (def unknown-encoded
     (bpe-tokenizer
      :encode
      "Akwirw ier"))
 
-  unknown-encoded 
+  unknown-encoded
   (bpe-tokenizer :decode unknown-encoded)
+
+  ;; Sliding window example
+  (def verdict-txt
+    (slurp
+     (str "https://raw.githubusercontent.com/rasbt/"
+          "LLMs-from-scratch/main/ch02/01_main-chapter-code/"
+          "the-verdict.txt")))
+
+  (def enc-txt (bpe-tokenizer :encode verdict-txt))
+
+  (count enc-txt) ;; 4943 tokens (book has 5145)
+  enc-txt
+
 
   ;;
   )
