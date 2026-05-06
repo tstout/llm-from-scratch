@@ -1,6 +1,9 @@
 (ns llm.dataset
   (:require [llm.bpe :refer [mk-bpe-tokenizer]]))
 
+;;
+;; The equivalent in the book of class GPTDatasetV1(Dataset)
+;;
 (defn gpt-dataset-v1
   [{:keys [txt max-length stride]}]
   ;; TODO - some range checks here? 
@@ -35,7 +38,6 @@
   (:len ds)
   (:token-ids ds)
   (- 128 22)
-  ds
 
   ;; like __len__
   
